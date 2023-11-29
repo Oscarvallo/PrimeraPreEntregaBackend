@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const ProductManagerFile = require('../managers/productsManager');
+const ProductManagerFile = require('../managers/productsManagerFile');
 
 const router = Router();
 const productsService = new ProductManagerFile();
@@ -8,7 +8,6 @@ router
   .get('/', async (req, res) => {
     try {
       const products = await productsService.getProducts();
-        
       res.send({
         status: 'success',
         payload: products,
@@ -20,11 +19,11 @@ router
       });
     }
   })
-  .get('/:pid', async (req, res) => {  // Agregado async para poder usar await
+  .get('/:pid', async (req, res) => {
     try {
       const { pid } = req.params;
-      const product = await productsService.getProduct(pid);
-    
+      const product = await productsService.getProduct(parseInt(pid));
+
       if (!product) {
         return res.status(400).send({
           status: 'error',
@@ -34,7 +33,7 @@ router
 
       res.send({
         status: 'success',
-        payload: product,  // Cambiado 'product' a product
+        payload: product,
       });
     } catch (error) {
       res.status(500).send({
@@ -55,14 +54,31 @@ router
       });
     }
   })
-  
-  .put('/:pid', (req, res) => {
-    const { pid } = req.params;
-    res.send('put product' + pid);
+  .put('/:pid', async (req, res) => {
+    try {
+      const { pid } = req.params;
+      const updateToProduct = req.body;
+      await productsService.update(parseInt(pid), updateToProduct);
+      res.send('Producto actualizado');
+    } catch (error) {
+      res.status(500).send({
+        status: 'error',
+        message: 'Error al actualizar el producto',
+      });
+    }
   })
-  .delete('/:pid', (req, res) => {
-    const { pid } = req.params;
-    res.send('delete product' + pid);
+  .delete('/:pid', async (req, res) => {
+    try {
+      const { pid } = req.params;
+      await productsService.delete(parseInt(pid));
+      res.send('Producto eliminado');
+    } catch (error) {
+      res.status(500).send({
+        status: 'error',
+        message: 'Error al eliminar el producto',
+      });
+    }
   });
 
 module.exports = router;
+

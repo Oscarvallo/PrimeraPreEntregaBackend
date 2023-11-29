@@ -3,7 +3,7 @@
 GET http://localhost:8080/api/products
 
 ###
-get http://localhost:8080/api/products/aaassas
+get http://localhost:8080/api/products/1
 
 ###
 post http://localhost:8080/api/products

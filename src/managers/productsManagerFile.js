@@ -1,29 +1,36 @@
 const fs = require('fs').promises;  
-const path = './src/mockDB/ProductsOne.json';
+const path ='./mockDB/productsList.json';
 
 class ProductManagerFile {
   constructor() {
     this.path = path;
+
+ 
   }
 
-  readFile = async () => {
-    try {
-      const data = await fs.readFile(this.path, 'utf-8');  
-      console.log(data);
-      return JSON.parse(data);
-    } catch (error) {
-      return [];
-    }
-  };
+readFile = async () => {
+  try {
+    const data = await fs.readFile(this.path, 'utf-8');  
+
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error al leer el archivo:', error);
+    return [];
+  }
+};
+
 
   getProducts = async () => {
     try {
       const products = await this.readFile();
+      console.log(products);
       return products;
     } catch (error) {
+
       return 'No hay productos';
     }
   };
+  
   
 
   getProduct = async (id) => {
@@ -39,7 +46,7 @@ class ProductManagerFile {
   addProduct = async (newItem) => {
     try {
       let products = await this.readFile();
-      // Si existe, no lo voy a crear
+    
       const productDb = products.find((product) => product.code === newItem.code);
       console.log(productDb);
       if (productDb) {
@@ -50,7 +57,7 @@ class ProductManagerFile {
         newItem.id = 1;
         products.push(newItem);
       } else {
-        //products = [...products, { ...newItem, id: products[products.length - 1].id + 1 }];
+
       products = [...products, {...newItem, id:products.length + 1}]
     }
 
@@ -62,13 +69,22 @@ class ProductManagerFile {
   };
   async update(pid, updateToProduct) {
     try {
-      let products = await this.readFile();  // Cambiado let product a let products
+      let products = await this.readFile();  
 
       const productIndex = products.findIndex((product) => pid === product.id);
       if (productIndex !== -1) {
-        products[productIndex] = updateToProduct;  // Cambiado producIndex a productIndex
+        products[productIndex] = updateToProduct;  
       }
 
+      await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2), 'utf-8');
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  async delete(pid) {
+    try {
+      let products = await this.readFile();
+      products = products.filter((product) => pid !== product.id);
       await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2), 'utf-8');
     } catch (error) {
       throw new Error(error);

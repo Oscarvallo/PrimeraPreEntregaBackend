@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "title": "Laptop Gaming",
+    "description": "Potente laptop para juegos",
+    "code": "LG001",
+    "price": 1299.99,
+    "status": true,
+    "stock": 50,
+    "category": "Electrónicos",
+    "thumbnails": ["path/to/lg_image1.jpg", "path/to/lg_image2.jpg"]
+  },
+  {
+    "id": 2,
+    "title": "Camiseta Deportiva",
+    "description": "Camiseta cómoda para actividades deportivas",
+    "code": "CD002",
+    "price": 19.99,
+    "status": true,
+    "stock": 100,
+    "category": "Ropa",
+    "thumbnails": ["path/to/cd_image1.jpg", "path/to/cd_image2.jpg"]
+  },
+  {
+    "id": 3,
+    "title": "Robot Aspiradora",
+    "description": "Robot inteligente para limpieza del hogar",
+    "code": "RA003",
+    "price": 249.99,
+    "status": true,
+    "stock": 30,
+    "category": "Hogar",
+    "thumbnails": ["path/to/ra_image1.jpg", "path/to/ra_image2.jpg"]
+  },
+  {
+    "id": 4,
+    "title": "Auriculares Inalámbricos",
+    "description": "Auriculares con tecnología Bluetooth",
+    "code": "AI004",
+    "price": 79.99,
+    "status": true,
+    "stock": 80,
+    "category": "Electrónicos",
+    "thumbnails": ["path/to/ai_image1.jpg", "path/to/ai_image2.jpg"]
+  },
+  {
+    "id": 5,
+    "title": "Silla de Oficina Ergonómica",
+    "description": "Silla cómoda para largas horas de trabajo",
+    "code": "SOE005",
+    "price": 149.99,
+    "status": true,
+    "stock": 20,
+    "category": "Muebles",
+    "thumbnails": ["path/to/soe_image1.jpg", "path/to/soe_image2.jpg"]
+  },
+  {
+    "id": 6,
+    "title": "Smartphone de Última Generación",
+    "description": "Teléfono inteligente con funciones avanzadas",
+    "code": "SU007",
+    "price": 899.99,
+    "status": true,
+    "stock": 40,
+    "category": "Electrónicos",
+    "thumbnails": ["path/to/su_image1.jpg", "path/to/su_image2.jpg"]
+  },
+  {
+    "id": 7,
+    "title": "Cámara DSLR Profesional",
+    "description": "Cámara de alta calidad para fotografía profesional",
+    "code": "CP008",
+    "price": 1299.99,
+    "status": true,
+    "stock": 15,
+    "category": "Electrónicos",
+    "thumbnails": ["path/to/cp_image1.jpg", "path/to/cp_image2.jpg"]
+  },
+  {
+    "id": 8,
+    "title": "Zapatos para Correr",
+    "description": "Calzado diseñado para actividades deportivas",
+    "code": "ZC009",
+    "price": 59.99,
+    "status": true,
+    "stock": 60,
+    "category": "Calzado",
+    "thumbnails": ["path/to/zc_image1.jpg", "path/to/zc_image2.jpg"]
+  },
+  {
+    "id": 9,
+    "title": "Licuadora Multifuncional",
+    "description": "Licuadora con múltiples funciones y potencia",
+    "code": "LM010",
+    "price": 89.99,
+    "status": true,
+    "stock": 25,
+    "category": "Electrodomésticos",
+    "thumbnails": ["path/to/lm_image1.jpg", "path/to/lm_image2.jpg"]
+  },
+  {
+    "id": 10,
+    "title": "Mochila Resistente al Agua",
+    "description": "Mochila ideal para actividades al aire libre",
+    "code": "MRA011",
+    "price": 49.99,
+    "status": true,
+    "stock": 70,
+    "category": "Accesorios",
+    "thumbnails": ["path/to/mra_image1.jpg", "path/to/mra_image2.jpg"]
+  }
+]
