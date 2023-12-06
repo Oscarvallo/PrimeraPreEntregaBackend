@@ -1,0 +1,34 @@
+<!-- realTimeProducts.handlebars -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+
+    <!-- Lista de productos -->
+    <ul id="productList">
+        {{#each products}}
+            <li id="{{this.id}}">
+                {{this.title}} - ${{this.price}}
+                <button onclick="eliminarProducto('{{this.id}}')">Eliminar</button>
+            </li>
+        {{/each}}
+    </ul>
+
+    <!-- Formulario para agregar productos -->
+    <form id="productForm">
+        <label for="productName">Nombre del Producto:</label>
+        <input type="text" id="productName" name="productName" required>
+        <label for="productPrice">Precio del Producto:</label>
+        <input type="number" id="productPrice" name="productPrice" required>
+        <button type="button" onclick="agregarProducto()">Agregar Producto</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/src/public/js/realTimeProducts.js"></script>
+</body>
+</html>

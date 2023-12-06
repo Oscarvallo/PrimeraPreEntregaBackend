@@ -1,5 +1,5 @@
 const fs = require('fs').promises;  
-const path ='./mockDB/productsList.json';
+const path = '../mockDB/productsList.json';
 
 class ProductManagerFile {
   constructor() {
