@@ -1,59 +1,73 @@
-// product.router.js
+const fs = require('fs');
+const path = require('path');
 const { Router } = require('express');
-const ProductManagerFile = require('../../managers/productsManagerFile');
 
 const router = Router();
-const productsService = new ProductManagerFile();
 
-// Función de enrutador que recibe la instancia de io
-module.exports = function(io) {
+module.exports = function (io, productList) {
   router
-    .get('/', async (req, res) => {
-      try {
-        const products = await productsService.getProducts();
-        res.send({
-          status: 'success',
-          payload: products,
-        });
-      } catch (error) {
-        res.status(500).send({
-          status: 'error',
-          message: 'Error al obtener los productos',
-        });
-      }
+    .get('/', (req, res) => {
+      res.send({
+        status: 'success',
+        payload: productList,
+      });
     })
-    .post('/', async (req, res) => {
-      try {
-        const product = req.body;
-        const result = await productsService.addProduct(product);
+    // Modifica la parte relevante en products.router.js
+.post('/', (req, res) => {
+  try {
+    const product = req.body;
+    const productId = obtenerNuevoId(); // Implementa una función para obtener un nuevo ID único
+    product.id = productId;
 
-        // Emite el evento para actualizar la lista de productos en tiempo real
-        io.emit('productoCreado', result);
+    productList.push(product);
 
-        res.send(result);
-      } catch (error) {
-        res.status(500).send({
-          status: 'error',
-          message: 'Error al agregar el producto',
-        });
-      }
-    })
-    .delete('/:pid', async (req, res) => {
-      try {
-        const { pid } = req.params;
-        await productsService.delete(parseInt(pid));
+    fs.writeFileSync(path.join(__dirname, '../../mockDB/productsList.json'), JSON.stringify(productList));
 
-        // Emite el evento para actualizar la lista de productos en tiempo real
-        io.emit('productoEliminado', parseInt(pid));
+    io.emit('productoCreado', product);
 
-        res.send('Producto eliminado');
-      } catch (error) {
-        res.status(500).send({
-          status: 'error',
-          message: 'Error al eliminar el producto',
-        });
-      }
+    console.log('Evento productoCreado emitido:', product);
+    res.send({
+      status: 'success',
+      payload: product,
     });
+  } catch (error) {
+    res.status(500).send({
+      status: 'error',
+      message: 'Error al agregar el producto',
+    });
+  }
+})
 
-  return router;
-};
+.delete('/:pid', (req, res) => {
+  try {
+    const productId = req.params.pid;
+    const index = productList.findIndex(product => product.id === parseInt(productId));
+
+    if (index !== -1) {
+      const deletedProduct = productList.splice(index, 1)[0];
+      fs.writeFileSync(path.join(__dirname, '../../mockDB/productsList.json'), JSON.stringify(productList));
+
+      io.emit('productoEliminado', deletedProduct.id);
+
+      console.log('Evento productoEliminado emitido:', deletedProduct.id);
+
+      res.send({
+        status: 'success',
+        payload: deletedProduct,
+      });
+    } else {
+      res.status(404).send({
+        status: 'error',
+        message: 'Producto no encontrado',
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      status: 'error',
+      message: 'Error al eliminar el producto',
+    });
+  }
+});
+
+return router;
+};4

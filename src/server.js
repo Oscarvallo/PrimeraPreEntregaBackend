@@ -1,4 +1,4 @@
-// server.js
+const fs = require('fs');
 const express = require('express');
 const exphbs = require('express-handlebars');
 const path = require('path');
@@ -11,10 +11,14 @@ const app = express();
 const serverHttp = http.createServer(app);
 const io = socketIo(serverHttp);
 
+// Lee la lista de productos al inicio
+let productList = JSON.parse(fs.readFileSync(path.join(__dirname, 'mockDB/productsList.json'), 'utf-8'));
+
+// Configuración del motor de plantillas Handlebars
 app.engine('.hbs', exphbs({
-   extname: '.hbs',
-   defaultLayout: 'main',
-   layoutsDir: path.join(__dirname, 'views/layouts'),
+  extname: '.hbs',
+  defaultLayout: 'main',
+  layoutsDir: path.join(__dirname, 'views/layouts'),
 }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -24,16 +28,37 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-// Rutas
 app.use('/views', viewsRouter);
-app.use('/api/products', productsRouter(io));  // Pasamos la instancia de io al enrutador
-app.use('/api/carts', (req, res) => {
-   res.send('Carts endpoint');
+app.use('/api/products', productsRouter(io, productList));
+
+// Configuración de eventos de socket
+io.on('connection', (socket) => {
+  console.log('Usuario conectado:', socket.id);
+
+  socket.on('crearProducto', (product) => {
+    console.log('Evento crearProducto recibido:', product);
+    productList.push(product);
+    fs.writeFileSync(path.join(__dirname, 'mockDB/productsList.json'), JSON.stringify(productList));
+    io.emit('productoCreado', product);
+  });
+
+  socket.on('eliminarProducto', (productId) => {
+    console.log('Evento eliminarProducto recibido:', productId);
+    productList = productList.filter((product) => product.id !== productId);
+    fs.writeFileSync(path.join(__dirname, 'mockDB/productsList.json'), JSON.stringify(productList));
+    io.emit('productoEliminado', productId);
+  });
+
+  // Otros eventos o configuraciones de socket pueden ir aquí...
+
+  socket.on('disconnect', () => {
+    console.log('Usuario desconectado:', socket.id);
+  });
 });
 
 const PORT = process.env.PORT || 8080;
 serverHttp.listen(PORT, () => {
-   console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
 
 // Exportamos solo el servidor HTTP

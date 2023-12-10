@@ -9,15 +9,16 @@
 <body>
     <h1>{{title}}</h1>
 
-    <!-- Lista de productos -->
-    <ul id="productList">
-        {{#each products}}
-            <li id="{{this.id}}">
-                {{this.title}} - ${{this.price}}
-                <button onclick="eliminarProducto('{{this.id}}')">Eliminar</button>
-            </li>
-        {{/each}}
-    </ul>
+<!-- Lista de productos -->
+<ul id="productList">
+    {{#each products}}
+        <li id="{{this.id}}">
+            {{this.title}} - ${{this.price}}
+            <button onclick="eliminarProducto('{{this.id}}')">Eliminar</button>
+        </li>
+    {{/each}}
+</ul>
+
 
     <!-- Formulario para agregar productos -->
     <form id="productForm">
@@ -28,7 +29,20 @@
         <button type="button" onclick="agregarProducto()">Agregar Producto</button>
     </form>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/src/public/js/realTimeProducts.js"></script>
+   <!-- Script de socket.io -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>
+<script>
+  socket.on('productoCreado', (producto) => {
+    console.log('Evento productoCreado recibido:', producto);
+    agregarProductoALaLista(producto);
+  });
+
+  socket.on('productoEliminado', (productId) => {
+    console.log('Evento productoEliminado recibido:', productId);
+    eliminarProductoDeLaLista(productId);
+  });
+</script>
+
 </body>
 </html>
