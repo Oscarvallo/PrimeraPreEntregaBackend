@@ -26,7 +26,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static('public'));
+// Configuración de archivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/views', viewsRouter);
 app.use('/api/products', productsRouter(io, productList));
@@ -36,14 +37,14 @@ io.on('connection', (socket) => {
   console.log('Usuario conectado:', socket.id);
 
   socket.on('crearProducto', (product) => {
-    console.log('Evento crearProducto recibido:', product);
+ 
     productList.push(product);
     fs.writeFileSync(path.join(__dirname, 'mockDB/productsList.json'), JSON.stringify(productList));
     io.emit('productoCreado', product);
   });
 
   socket.on('eliminarProducto', (productId) => {
-    console.log('Evento eliminarProducto recibido:', productId);
+   
     productList = productList.filter((product) => product.id !== productId);
     fs.writeFileSync(path.join(__dirname, 'mockDB/productsList.json'), JSON.stringify(productList));
     io.emit('productoEliminado', productId);
