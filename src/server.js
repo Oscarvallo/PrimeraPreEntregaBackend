@@ -6,13 +6,18 @@ const http = require('http');
 const socketIo = require('socket.io');
 const productsRouter = require('./routers/apis/products.router');
 const viewsRouter = require('./routers/views/views.router.js');
+const userRouter = require ('./routers/apis/user.router.js')
 
 const app = express();
 const serverHttp = http.createServer(app);
 const io = socketIo(serverHttp);
-
+const {connect} = require ('mongoose')
 // Lee la lista de productos al inicio
-let productList = JSON.parse(fs.readFileSync(path.join(__dirname, 'mockDB/productsList.json'), 'utf-8'));
+const connectDB = async () => { 
+  await connect ('mongodb+srv://Ocarvallo:Analia37@cluster0.t3vhqqa.mongodb.net/MiprimeraBD?retryWrites=true&w=majority')
+  console.log('base de datos conectada') }
+  connectDB()
+  let productList = JSON.parse(fs.readFileSync(path.join(__dirname, 'mockDB/productsList.json'), 'utf-8'));
 
 // Configuración del motor de plantillas Handlebars
 app.engine('.hbs', exphbs({
@@ -31,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/views', viewsRouter);
 app.use('/api/products', productsRouter(io, productList));
-
+app.use ('/api/users', userRouter)
 // Configuración de eventos de socket
 io.on('connection', (socket) => {
   console.log('Usuario conectado:', socket.id);
