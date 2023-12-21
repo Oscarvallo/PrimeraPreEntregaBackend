@@ -48,16 +48,16 @@ router.post('/', async (req, res) => {
 
 router.put('/:uid', async (req, res) => {
     try {
-        const { uid } = req.params;
-        const { first_name, last_name, email } = req.body;
-
-        // Verificar si uid es un ObjectId válido
-        if (!mongoose.Types.ObjectId.isValid(uid)) {
-            return res.status(400).send({
-                status: 'error',
-                message: 'ID de usuario no válido'
+        router.put('/:uid', async (req, res) => {
+            const { uid } = req.params;
+            const { first_name, last_name, email } = req.body;
+            const result = await usersModel.updateOne({ _id: uid }, { first_name, last_name, email });
+            res.status(201).send({
+                status: 'success',
+                payload: result
             });
-        }
+        });
+        
 
         // Actualizar el usuario por su ID
         const result = await usersModel.updateOne({ _id: uid }, {
